@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import './App.css';
-// import Player from './components/Player'
-import Player from './components/SimplePlayer'
+import Player from './components/Player'
 
 class App extends Component {
   render() {

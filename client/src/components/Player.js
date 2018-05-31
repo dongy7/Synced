@@ -3,20 +3,75 @@ import YoutubePlayer from 'youtube-player'
 import IconButton from '@material-ui/core/IconButton'
 import PlayArrowIcon from '@material-ui/icons/PlayArrow'
 import PauseIcon from '@material-ui/icons/Pause'
-import { subscribe, requestPause, requestPlay, ready } from '../api'
 import ProgressBar from './ProgressBar'
+import { subscribe, requestPause, requestPlay, requestSeek, ready, readySeek } from '../api'
 
 class Player extends React.Component {
+  static stateNames = {
+    '-1': 'unstarted',
+    0: 'ended',
+    1: 'playing',
+    2: 'paused',
+    3: 'buffering',
+    5: 'cued'
+  }
+
+  static getState = event => Player.stateNames[event.data]
+
   constructor(props) {
     super(props)
     this.state = {
-      progress: 0,
-      buffering: false,
-      totalTime: 1,
       duration: 1,
-      currentTime: 0
+      currentTime: 0,
     }
+  }
 
+  componentDidMount() {
+    this.player = YoutubePlayer(this.refPlayer, {
+      width: '100%',
+      height: '100%',
+      videoId: 'i0p1bmr0EmE',
+      playerVars: {
+        controls: 0,
+        showinfo: 0,
+      }
+    })
+
+    this.setSubscription()
+
+    this.player.on('ready', () => {
+      this.player.getDuration().then(val => this.setState({ duration: val }))
+    })
+
+    this.player.on('stateChange', event => {
+      if (Player.getState(event) === 'playing') {
+        const interval = 50;
+        this.timer = setInterval(() => {
+          this.setState({
+            currentTime: this.state.currentTime + interval/1000
+          })
+        }, interval)
+      } else {
+        clearInterval(this.timer)
+      }
+    })
+
+    this.boundingBox = this.element.getBoundingClientRect()
+    this.setState({
+      width: this.boundingBox.width,
+      left: this.boundingBox.left
+    })
+
+    window.addEventListener('resize', () => {
+      this.boundingBox = this.element.getBoundingClientRect()
+      this.setState({
+        width: this.boundingBox.width,
+        left: this.boundingBox.left
+      })
+    })
+  }
+
+  setSubscription() {
     subscribe({
       pause: () => {
         this.player.pauseVideo()
@@ -40,75 +95,57 @@ class Player extends React.Component {
             }
           })
         })
-      }
-    })
-  }
-
-  static stateNames = {
-    '-1': 'unstarted',
-    0: 'ended',
-    1: 'playing',
-    2: 'paused',
-    3: 'buffering',
-    5: 'cued'
-  }
-
-  static getState = event => Player.stateNames[event.data]
-
-  componentDidMount() {
-    this.player = YoutubePlayer(this.refPlayer, {
-      width: '100%',
-      height: '100%',
-      videoId: 'i0p1bmr0EmE',
-      playerVars: {
-        controls: 0,
-        showinfo: 0,
-      }
-    })
-
-    this.listeners = {
-      pauseListener: this.player.on('stateChange', event => {
-        if (!this.state.buffering) {
-          if (Player.getState(event) === 'pause') {
-            pause()
-          }
-        }
-      })
-    }
-
-    this.player.on('stateChange', event => {
-      if (Player.getState(event) === 'playing') {
-        const interval = 10;
-        this.timer = setInterval(() => {
+      },
+      readySeek: (time) => {
+        this.player.seekTo(time).then(() => {
           this.setState({
-            currentTime: this.state.currentTime + interval/1000
+            currentTime: time
           })
-        }, interval)
-      } else {
-        clearInterval(this.timer)
+        })
+        this.setState({
+          buffering: true
+        }, () => {
+          const listener = this.player.on('stateChange', event => {
+            const state = Player.getState(event)
+            if (state === 'playing' || state === 'paused') {
+              this.player.off(listener)
+              this.setState({ buffering: false }, () => {
+                this.player.pauseVideo().then(() => {
+                  readySeek(time)
+                })
+              })
+            }
+          })
+        })
+      },
+      seek: (time) => {
+        this.player.seekTo(time).then(() => {
+          this.setState({
+            currentTime: time
+          })
+        })
       }
-    })
-
-    this.player.on('ready', () => {
-      this.player.getDuration().then(val => this.setState({ duration: val }))
     })
   }
 
-  handlePlay() {
+  handlePlayClick() {
     requestPlay()
   }
 
-  handlePause() {
+  handlePauseClick() {
     requestPause()
   }
 
-  handleProgressClick(percent) {
-    const seekTime = this.state.duration * percent;
-    clearInterval(this.timer)
-    this.setState({
-      currentTime: seekTime,
+  handleProgressClick(progress) {
+    const seekTime = this.state.duration * progress;
+    this.player.getPlayerState().then(val => {
+      const state = Player.stateNames[val]
+      console.log(val, state)
+      requestSeek({
+        time: seekTime,
+        paused: state === 'paused'
+      })
     })
-    this.player.seekTo(seekTime)
   }
 
   render() {
@@ -117,19 +154,25 @@ class Player extends React.Component {
         <div className="player" ref={element => {
           this.refPlayer = element
         }}/>
-        <div>
+        <div className="control">
           <IconButton>
-            <PlayArrowIcon onClick={() => this.handlePlay()} />
+            <PlayArrowIcon onClick={() => this.handlePlayClick()} />
           </IconButton>
           <IconButton>
-            <PauseIcon onClick={() => this.handlePause()} />
+            <PauseIcon onClick={() => this.handlePauseClick()} />
           </IconButton>
-          <ProgressBar
-            completed={this.state.currentTime/this.state.duration}
-            onClick={(progress) => {
-              this.handleProgressClick(progress)
+          <div 
+            className="control-progress"
+            ref={element => {this.element = element}}
+            onClick={(e) => {
+              const progress = e.nativeEvent.pageX - this.state.left
+              this.handleProgressClick((progress/this.state.width))
             }}
-          />
+          >
+            <ProgressBar
+              completed={this.state.currentTime/this.state.duration}
+            />
+          </div>
         </div>
       </Fragment>
     )
