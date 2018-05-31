@@ -1,17 +1,20 @@
 import React, { Component } from 'react';
+import { BrowserRouter as Router, Route } from 'react-router-dom'
 import './App.css';
-import Player from './components/Player'
+import Landing from './containers/Landing'
+import Main from './containers/Main'
 
 class App extends Component {
   render() {
     return (
-      <div className="App">
-        <div className="container">
-          <Player />
+      <Router>
+        <div>
+          <Route exact path="/" component={Landing}></Route>
+          <Route path="/channel/:id" component={Main}></Route>
         </div>
-      </div>
-    );
+      </Router>
+    )
   }
 }
 
-export default App;
+export default App

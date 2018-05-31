@@ -30,7 +30,7 @@ class Player extends React.Component {
     this.player = YoutubePlayer(this.refPlayer, {
       width: '100%',
       height: '100%',
-      videoId: 'i0p1bmr0EmE',
+      videoId: this.props.id,
       playerVars: {
         controls: 0,
         showinfo: 0,

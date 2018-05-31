@@ -22,11 +22,6 @@ class LinearDeterminate extends React.Component {
         <LinearProgress
           variant="determinate"
           value={this.props.completed * 100}
-          // onClick={(e) => {
-          //   console.log(e.nativeEvent.offsetX)
-          //   const percent = e.nativeEvent.offsetX/this.boundingBox.width
-          //   this.props.onClick(percent)
-          // }}
         />
       </div>
     );
