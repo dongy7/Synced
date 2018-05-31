@@ -3,11 +3,10 @@ const socket = openSocket('http://localhost:3001')
 
 export const subscribe = (callbacks) => {
   socket.on('connect', () => {
-    console.log('connected')
+    console.log('connected to server')
   })
 
   socket.on('pause', () => {
-    // console.log('server paused')
     callbacks.pause()
   })
 
@@ -16,23 +15,34 @@ export const subscribe = (callbacks) => {
   })
 
   socket.on('play', () => {
-    // console.log('server played')
     callbacks.play()
   })
 
-  socket.on()
+  socket.on('seek', (data) => {
+    callbacks.seek(data.time)
+  })
+
+  socket.on('readySeek', (data) => {
+    callbacks.readySeek(data.time)
+  })
 }
 
-export const pause = () => {
-  console.log('pausing video')
-  socket.emit('pause')
+export const requestPause = () => {
+  socket.emit('pauseRequest')
 }
 
-export const play = () => {
+export const requestPlay = () => {
   socket.emit('playRequest')
 }
 
 export const ready = () => {
-  console.log('client ready')
   socket.emit('ready')
+}
+
+export const requestSeek = (config) => {
+  socket.emit('seekRequest', config)
+}
+
+export const readySeek = (time) => {
+  socket.emit('seekReady', {time})
 }

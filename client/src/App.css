@@ -27,7 +27,20 @@
   to { transform: rotate(360deg); }
 }
 
+.container {
+  max-width: 1080px;
+  margin: 0 auto;
+}
+
 .player {
-  width: 640px;
   height: 480px;
+}
+
+.control {
+  display: flex;
+}
+
+.control-progress {
+  margin-top: 22px;
+  flex-grow: 1;
 }

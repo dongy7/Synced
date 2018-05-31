@@ -3,7 +3,7 @@ import YoutubePlayer from 'youtube-player'
 import IconButton from '@material-ui/core/IconButton'
 import PlayArrowIcon from '@material-ui/icons/PlayArrow'
 import PauseIcon from '@material-ui/icons/Pause'
-import { subscribe, pause, play, ready } from '../api'
+import { subscribe, requestPause, requestPlay, ready } from '../api'
 import ProgressBar from './ProgressBar'
 
 class Player extends React.Component {
@@ -12,21 +12,17 @@ class Player extends React.Component {
     this.state = {
       progress: 0,
       buffering: false,
-      totalTime: 1
+      totalTime: 1,
+      duration: 1,
+      currentTime: 0
     }
 
     subscribe({
       pause: () => {
         this.player.pauseVideo()
-          .then(() => {
-            // console.log('video paused')
-          })
       },
       play: () => {
         this.player.playVideo()
-          .then(() => {
-            // console.log('playing video')
-          })
       },
       ready: () => {
         this.player.playVideo()
@@ -80,17 +76,39 @@ class Player extends React.Component {
       })
     }
 
-    this.player.on('error', (event) => {
-      console.log(event)
+    this.player.on('stateChange', event => {
+      if (Player.getState(event) === 'playing') {
+        const interval = 10;
+        this.timer = setInterval(() => {
+          this.setState({
+            currentTime: this.state.currentTime + interval/1000
+          })
+        }, interval)
+      } else {
+        clearInterval(this.timer)
+      }
+    })
+
+    this.player.on('ready', () => {
+      this.player.getDuration().then(val => this.setState({ duration: val }))
     })
   }
 
   handlePlay() {
-    play()
+    requestPlay()
   }
 
   handlePause() {
-    pause()
+    requestPause()
+  }
+
+  handleProgressClick(percent) {
+    const seekTime = this.state.duration * percent;
+    clearInterval(this.timer)
+    this.setState({
+      currentTime: seekTime,
+    })
+    this.player.seekTo(seekTime)
   }
 
   render() {
@@ -106,7 +124,12 @@ class Player extends React.Component {
           <IconButton>
             <PauseIcon onClick={() => this.handlePause()} />
           </IconButton>
-          <ProgressBar completed={this.state.progress} />
+          <ProgressBar
+            completed={this.state.currentTime/this.state.duration}
+            onClick={(progress) => {
+              this.handleProgressClick(progress)
+            }}
+          />
         </div>
       </Fragment>
     )

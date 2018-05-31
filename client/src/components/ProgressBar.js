@@ -1,5 +1,4 @@
 import React from 'react';
-import { withStyles } from '@material-ui/core/styles';
 import LinearProgress from '@material-ui/core/LinearProgress';
 
 class LinearDeterminate extends React.Component {
@@ -22,8 +21,12 @@ class LinearDeterminate extends React.Component {
       <div ref={element => {this.element = element}}>
         <LinearProgress
           variant="determinate"
-          value={this.props.completed}
-          onClick={(e) => console.log(e.nativeEvent.offsetX)}
+          value={this.props.completed * 100}
+          // onClick={(e) => {
+          //   console.log(e.nativeEvent.offsetX)
+          //   const percent = e.nativeEvent.offsetX/this.boundingBox.width
+          //   this.props.onClick(percent)
+          // }}
         />
       </div>
     );
