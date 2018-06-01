@@ -8,12 +8,12 @@ import Prompt from './Prompt'
 
 const styles = {
   root: {
-    flexGrow: 1,
+    flexGrow: 1
   },
   flex: {
-    flex: 1,
-  },
-};
+    flex: 1
+  }
+}
 
 class Navbar extends React.Component {
   constructor(props) {
@@ -29,7 +29,11 @@ class Navbar extends React.Component {
       <div className={classes.root}>
         <AppBar position="static" color="default">
           <Toolbar>
-            <Typography variant="title" color="inherit" className={classes.flex}>
+            <Typography
+              variant="title"
+              color="inherit"
+              className={classes.flex}
+            >
               YouTube Sync
             </Typography>
             <Button
@@ -46,10 +50,10 @@ class Navbar extends React.Component {
               open={this.state.open}
               onClose={() => {
                 this.setState({
-                  open: false,
+                  open: false
                 })
               }}
-              onSubmit={(name) => {
+              onSubmit={name => {
                 this.setState({
                   open: false
                 })

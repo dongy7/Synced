@@ -1,8 +1,8 @@
 import React from 'react'
 import Grid from '@material-ui/core/Grid'
 import InputField from '../components/InputField'
-import {parseUrl} from '../utils'
-import {getId, createId} from '../api'
+import { parseUrl } from '../utils'
+import { getId, createId } from '../api'
 
 class Landing extends React.Component {
   handleUrl(url) {
@@ -25,9 +25,7 @@ class Landing extends React.Component {
           </Grid>
           <Grid item xs={3} />
           <Grid item xs={6}>
-            <InputField
-              onEntered={(url) => this.handleUrl(url)}
-            />
+            <InputField onEntered={url => this.handleUrl(url)} />
           </Grid>
           <Grid item xs={3} />
         </Grid>

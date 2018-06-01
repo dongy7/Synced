@@ -1,6 +1,6 @@
-var express = require('express');
+var express = require('express')
 var randomstring = require('randomstring')
-var router = express.Router();
+var router = express.Router()
 
 var videos = {}
 
@@ -19,7 +19,7 @@ router.post('/id', function(req, res, next) {
   res.json({
     id: id
   })
-});
+})
 
 router.get('/video/:id', function(req, res, next) {
   res.json({
@@ -27,4 +27,4 @@ router.get('/video/:id', function(req, res, next) {
   })
 })
 
-module.exports = router;
+module.exports = router

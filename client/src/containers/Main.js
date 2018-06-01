@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import CircularProgress from '@material-ui/core/CircularProgress';
+import CircularProgress from '@material-ui/core/CircularProgress'
 import Grid from '@material-ui/core/Grid'
 import Player from '../components/Player'
 import Chat from '../components/Chat'
@@ -23,7 +23,7 @@ class Main extends Component {
 
   componentDidMount() {
     this.handler.subscribeChat({
-      messageReceived: (msg) => {
+      messageReceived: msg => {
         this.setState({
           messages: this.state.messages.concat({
             author: msg.author,
@@ -33,7 +33,7 @@ class Main extends Component {
       }
     })
 
-    getName(this.id).then((name) => {
+    getName(this.id).then(name => {
       this.setState({
         name
       })
@@ -49,9 +49,7 @@ class Main extends Component {
 
   render() {
     if (this.state.loading) {
-      return (
-        <CircularProgress />
-      )
+      return <CircularProgress />
     }
 
     return (
@@ -59,7 +57,7 @@ class Main extends Component {
         <Navbar
           name={this.state.name}
           onNameSubmit={name => {
-            this.setState({name})
+            this.setState({ name })
           }}
         />
         <div className="content">
@@ -79,7 +77,7 @@ class Main extends Component {
                 id={this.id}
                 handler={this.handler}
                 messages={this.state.messages}
-                onMessageSent={(text) => {
+                onMessageSent={text => {
                   this.handler.sendMessage({
                     author: this.state.name,
                     text

@@ -1,4 +1,4 @@
-export const parseUrl = (url) => {
+export const parseUrl = url => {
   const re = /watch\?v=([a-zA-Z0-9]*)/
   const shortRe = /youtu.be\/([a-zA-Z0-9]*)/
   const match = url.match(re)
@@ -7,7 +7,7 @@ export const parseUrl = (url) => {
   let value = url
 
   if (match) {
-    value =  match[1]
+    value = match[1]
   } else if (shortMatch) {
     value = shortMatch[1]
   } else {
@@ -20,10 +20,10 @@ export const parseUrl = (url) => {
   }
 }
 
-export const getWidth = (width) => {
+export const getWidth = width => {
   return Math.max(480, width)
 }
 
-export const getHeight = (width) => {
-  return Math.max(270, 9/16*width)
+export const getHeight = width => {
+  return Math.max(270, (9 / 16) * width)
 }

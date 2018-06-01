@@ -8,13 +8,13 @@ class InputField extends React.Component {
       val: ''
     }
   }
-  
+
   render() {
     return (
       <TextField
         value={this.state.val}
         InputLabelProps={{
-          shrink: true,
+          shrink: true
         }}
         inputProps={{
           style: {
@@ -24,12 +24,12 @@ class InputField extends React.Component {
         placeholder="Enter YouTube URL or existing channel ID"
         fullWidth
         margin="normal"
-        onChange={(e) => {
+        onChange={e => {
           this.setState({
             val: e.target.value
           })
         }}
-        onKeyPress={(e) => {
+        onKeyPress={e => {
           if (e.key === 'Enter') {
             this.props.onEntered(this.state.val)
           }

@@ -1,6 +1,6 @@
 import React from 'react'
 import YoutubePlayer from 'youtube-player'
-import Card from '@material-ui/core/Card';
+import Card from '@material-ui/core/Card'
 import IconButton from '@material-ui/core/IconButton'
 import PlayArrowIcon from '@material-ui/icons/PlayArrow'
 import PauseIcon from '@material-ui/icons/Pause'
@@ -49,7 +49,7 @@ class Player extends React.Component {
         width: this.boundingBox.width,
         left: this.boundingBox.left
       })
-      
+
       playerWidth = getWidth(controlBox.width)
       playerHeight = getHeight(playerWidth)
       this.player.setSize(playerWidth, playerHeight)
@@ -61,7 +61,7 @@ class Player extends React.Component {
       videoId: this.props.id,
       playerVars: {
         controls: 0,
-        showinfo: 0,
+        showinfo: 0
       }
     })
 
@@ -73,10 +73,10 @@ class Player extends React.Component {
 
     this.player.on('stateChange', event => {
       if (Player.getState(event) === 'playing') {
-        const interval = 50;
+        const interval = 50
         this.timer = setInterval(() => {
           this.setState({
-            currentTime: this.state.currentTime + interval/1000
+            currentTime: this.state.currentTime + interval / 1000
           })
         }, interval)
       } else {
@@ -95,44 +95,50 @@ class Player extends React.Component {
       },
       ready: () => {
         this.player.playVideo()
-        this.setState({
-          buffering: true
-        }, () => {
-          const listener = this.player.on('stateChange', event => {
-            if (Player.getState(event) === 'playing') {
-              this.player.off(listener)
-              this.setState({ buffering: false }, () => {
-                this.player.pauseVideo().then(() => {
-                  this.handler.ready(this.props.id)
+        this.setState(
+          {
+            buffering: true
+          },
+          () => {
+            const listener = this.player.on('stateChange', event => {
+              if (Player.getState(event) === 'playing') {
+                this.player.off(listener)
+                this.setState({ buffering: false }, () => {
+                  this.player.pauseVideo().then(() => {
+                    this.handler.ready(this.props.id)
+                  })
                 })
-              })
-            }
-          })
-        })
+              }
+            })
+          }
+        )
       },
-      readySeek: (time) => {
+      readySeek: time => {
         this.player.seekTo(time).then(() => {
           this.setState({
             currentTime: time
           })
         })
-        this.setState({
-          buffering: true
-        }, () => {
-          const listener = this.player.on('stateChange', event => {
-            const state = Player.getState(event)
-            if (state === 'playing' || state === 'paused') {
-              this.player.off(listener)
-              this.setState({ buffering: false }, () => {
-                this.player.pauseVideo().then(() => {
-                  this.handler.readySeek(time)
+        this.setState(
+          {
+            buffering: true
+          },
+          () => {
+            const listener = this.player.on('stateChange', event => {
+              const state = Player.getState(event)
+              if (state === 'playing' || state === 'paused') {
+                this.player.off(listener)
+                this.setState({ buffering: false }, () => {
+                  this.player.pauseVideo().then(() => {
+                    this.handler.readySeek(time)
+                  })
                 })
-              })
-            }
-          })
-        })
+              }
+            })
+          }
+        )
       },
-      seek: (time) => {
+      seek: time => {
         this.player.seekTo(time).then(() => {
           this.setState({
             currentTime: time
@@ -151,7 +157,7 @@ class Player extends React.Component {
   }
 
   handleProgressClick(progress) {
-    const seekTime = this.state.duration * progress;
+    const seekTime = this.state.duration * progress
     this.player.getPlayerState().then(val => {
       const state = Player.stateNames[val]
       this.handler.requestSeek({
@@ -164,26 +170,36 @@ class Player extends React.Component {
   render() {
     return (
       <Card>
-        <div className="player" ref={element => {
-          this.refPlayer = element
-        }}/>
-        <div className="control" ref={element => {this.control = element}}>
+        <div
+          className="player"
+          ref={element => {
+            this.refPlayer = element
+          }}
+        />
+        <div
+          className="control"
+          ref={element => {
+            this.control = element
+          }}
+        >
           <IconButton>
             <PlayArrowIcon onClick={() => this.handlePlayClick()} />
           </IconButton>
           <IconButton>
             <PauseIcon onClick={() => this.handlePauseClick()} />
           </IconButton>
-          <div 
+          <div
             className="control-progress"
-            ref={element => {this.element = element}}
-            onClick={(e) => {
+            ref={element => {
+              this.element = element
+            }}
+            onClick={e => {
               const progress = e.nativeEvent.pageX - this.state.left
-              this.handleProgressClick((progress/this.state.width))
+              this.handleProgressClick(progress / this.state.width)
             }}
           >
             <ProgressBar
-              completed={this.state.currentTime/this.state.duration}
+              completed={this.state.currentTime / this.state.duration}
             />
           </div>
         </div>

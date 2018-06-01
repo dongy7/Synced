@@ -1,5 +1,5 @@
-import React from 'react';
-import LinearProgress from '@material-ui/core/LinearProgress';
+import React from 'react'
+import LinearProgress from '@material-ui/core/LinearProgress'
 
 class LinearDeterminate extends React.Component {
   componentDidMount() {
@@ -18,14 +18,18 @@ class LinearDeterminate extends React.Component {
 
   render() {
     return (
-      <div ref={element => {this.element = element}}>
+      <div
+        ref={element => {
+          this.element = element
+        }}
+      >
         <LinearProgress
           variant="determinate"
           value={this.props.completed * 100}
         />
       </div>
-    );
+    )
   }
 }
 
-export default LinearDeterminate;
+export default LinearDeterminate

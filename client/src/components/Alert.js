@@ -1,5 +1,5 @@
 import React from 'react'
-import Snackbar from '@material-ui/core/Snackbar';
+import Snackbar from '@material-ui/core/Snackbar'
 
 class Alert extends React.Component {
   render() {
@@ -13,7 +13,7 @@ class Alert extends React.Component {
         autoHideDuration={2000}
         onClose={() => this.props.onClose()}
         ContentProps={{
-          'aria-describedby': 'message-id',
+          'aria-describedby': 'message-id'
         }}
         message={<span id="message-id">Code copied to clipboard</span>}
       />

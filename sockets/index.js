@@ -2,7 +2,7 @@ module.exports = io => {
   const channels = {}
 
   io.on('connection', socket => {
-    socket.on('channel', (id) => {
+    socket.on('channel', id => {
       if (!channels[id]) {
         channels[id] = {
           numClients: 0,
@@ -14,15 +14,15 @@ module.exports = io => {
       socket.join(id)
     })
 
-    socket.on('pauseRequest', (data) => {
+    socket.on('pauseRequest', data => {
       io.sockets.in(data.id).emit('pause')
     })
 
-    socket.on('playRequest', (data) => {
+    socket.on('playRequest', data => {
       io.sockets.in(data.id).emit('ready')
     })
 
-    socket.on('ready', (data) => {
+    socket.on('ready', data => {
       const channel = channels[data.id]
       channel.readyCount++
       if (channel.readyCount === channel.numClients) {
@@ -31,7 +31,7 @@ module.exports = io => {
       }
     })
 
-    socket.on('seekReady', (data) => {
+    socket.on('seekReady', data => {
       const channel = channels[data.id]
       channel.readyCount++
       if (channel.readyCount === channel.numClients) {
@@ -40,7 +40,7 @@ module.exports = io => {
       }
     })
 
-    socket.on('seekRequest', (data) => {
+    socket.on('seekRequest', data => {
       if (data.paused) {
         io.sockets.in(data.id).emit('seek', {
           time: data.time
@@ -52,11 +52,11 @@ module.exports = io => {
       }
     })
 
-    socket.on('sendMessage', (data) => {
+    socket.on('sendMessage', data => {
       io.sockets.in(data.id).emit('messageReceived', data)
     })
 
-    socket.on('disconnecting', (reason) => {
+    socket.on('disconnecting', reason => {
       const rooms = Object.keys(socket.rooms)
       rooms.forEach(room => {
         if (channels[room]) {

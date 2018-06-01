@@ -1,10 +1,10 @@
 import React from 'react'
-import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
+import Button from '@material-ui/core/Button'
+import TextField from '@material-ui/core/TextField'
+import Dialog from '@material-ui/core/Dialog'
+import DialogActions from '@material-ui/core/DialogActions'
+import DialogContent from '@material-ui/core/DialogContent'
+import DialogContentText from '@material-ui/core/DialogContentText'
 
 class Prompt extends React.Component {
   constructor(props) {
@@ -24,9 +24,7 @@ class Prompt extends React.Component {
           aria-labelledby="form-dialog-title"
         >
           <DialogContent>
-            <DialogContentText>
-              Enter a new nickname.
-            </DialogContentText>
+            <DialogContentText>Enter a new nickname.</DialogContentText>
             <TextField
               value={this.state.value}
               onChange={e => {
@@ -45,7 +43,10 @@ class Prompt extends React.Component {
             <Button onClick={() => this.props.onClose()} color="primary">
               Cancel
             </Button>
-            <Button onClick={() => this.props.onSubmit(this.state.name)} color="primary">
+            <Button
+              onClick={() => this.props.onSubmit(this.state.name)}
+              color="primary"
+            >
               Confirm
             </Button>
           </DialogActions>
