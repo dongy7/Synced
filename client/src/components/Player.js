@@ -4,7 +4,7 @@ import IconButton from '@material-ui/core/IconButton'
 import PlayArrowIcon from '@material-ui/icons/PlayArrow'
 import PauseIcon from '@material-ui/icons/Pause'
 import ProgressBar from './ProgressBar'
-import { subscribe, requestPause, requestPlay, requestSeek, ready, readySeek } from '../api'
+import { Hanlder } from '../api'
 
 class Player extends React.Component {
   static stateNames = {
@@ -20,6 +20,7 @@ class Player extends React.Component {
 
   constructor(props) {
     super(props)
+    this.handler = new Hanlder(this.props.id)
     this.state = {
       duration: 1,
       currentTime: 0,
@@ -72,7 +73,7 @@ class Player extends React.Component {
   }
 
   setSubscription() {
-    subscribe({
+    this.handler.subscribe({
       pause: () => {
         this.player.pauseVideo()
       },
@@ -89,7 +90,7 @@ class Player extends React.Component {
               this.player.off(listener)
               this.setState({ buffering: false }, () => {
                 this.player.pauseVideo().then(() => {
-                  ready()
+                  this.handler.ready(this.props.id)
                 })
               })
             }
@@ -111,7 +112,7 @@ class Player extends React.Component {
               this.player.off(listener)
               this.setState({ buffering: false }, () => {
                 this.player.pauseVideo().then(() => {
-                  readySeek(time)
+                  this.handler.readySeek(time)
                 })
               })
             }
@@ -129,19 +130,18 @@ class Player extends React.Component {
   }
 
   handlePlayClick() {
-    requestPlay()
+    this.handler.requestPlay(this.props.id)
   }
 
   handlePauseClick() {
-    requestPause()
+    this.handler.requestPause(this.props.id)
   }
 
   handleProgressClick(progress) {
     const seekTime = this.state.duration * progress;
     this.player.getPlayerState().then(val => {
       const state = Player.stateNames[val]
-      console.log(val, state)
-      requestSeek({
+      this.handler.requestSeek({
         time: seekTime,
         paused: state === 'paused'
       })
