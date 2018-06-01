@@ -24,6 +24,10 @@
   min-height: 270px;
 }
 
+.player-info {
+  margin-top: 15px;
+}
+
 .player-container {
   margin-left: 30px;
   min-width: 480px;

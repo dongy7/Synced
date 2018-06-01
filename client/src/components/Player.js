@@ -1,5 +1,6 @@
 import React from 'react'
 import YoutubePlayer from 'youtube-player'
+import Card from '@material-ui/core/Card';
 import IconButton from '@material-ui/core/IconButton'
 import PlayArrowIcon from '@material-ui/icons/PlayArrow'
 import PauseIcon from '@material-ui/icons/Pause'
@@ -162,7 +163,7 @@ class Player extends React.Component {
 
   render() {
     return (
-      <div>
+      <Card>
         <div className="player" ref={element => {
           this.refPlayer = element
         }}/>
@@ -186,7 +187,7 @@ class Player extends React.Component {
             />
           </div>
         </div>
-      </div>
+      </Card>
     )
   }
 }

@@ -26,7 +26,7 @@ class VideoInfo extends React.Component {
 
   render() {
     return (
-      <div>
+      <div className="player-info">
         <Card>
           <CardHeader
             title={this.state.title}
