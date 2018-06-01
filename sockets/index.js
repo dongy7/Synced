@@ -52,6 +52,10 @@ module.exports = io => {
       }
     })
 
+    socket.on('sendMessage', (data) => {
+      io.sockets.in(data.id).emit('messageReceived', data)
+    })
+
     socket.on('disconnecting', (reason) => {
       const rooms = Object.keys(socket.rooms)
       rooms.forEach(room => {
