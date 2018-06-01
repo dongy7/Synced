@@ -4,6 +4,7 @@ import Grid from '@material-ui/core/Grid'
 import Player from '../components/Player'
 import Chat from '../components/Chat'
 import Navbar from '../components/Navbar'
+import VideoInfo from '../components/VideoInfo'
 import { Handler, getId } from '../api'
 import { getName } from '../api/name'
 
@@ -70,6 +71,7 @@ class Main extends Component {
                   name={this.state.name}
                   handler={this.handler}
                 />
+                <VideoInfo id={this.id} />
               </div>
             </Grid>
             <Grid item xs={4}>

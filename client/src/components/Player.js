@@ -162,7 +162,7 @@ class Player extends React.Component {
 
   render() {
     return (
-      <div className="player-container">
+      <div>
         <div className="player" ref={element => {
           this.refPlayer = element
         }}/>

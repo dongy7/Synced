@@ -1,4 +1,5 @@
 import React from 'react'
+import Card from '@material-ui/core/Card'
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
@@ -44,6 +45,7 @@ class Chat extends React.Component {
 
     return (
       <div className="chat">
+        <Card>
         <List className={classes.root} subheader={<ListSubheader>Chat</ListSubheader>}>
           {this.props.messages.map(message => (
             <ListItem divider>
@@ -54,6 +56,7 @@ class Chat extends React.Component {
               ref={(el) => { this.messagesEnd = el; }}>
           </div>
         </List>
+        <div className="chat-input">
         <TextField
           value={this.state.text}
           fullWidth
@@ -70,6 +73,8 @@ class Chat extends React.Component {
             }
           }}
         />
+        </div>
+        </Card>
       </div>
     )
   }

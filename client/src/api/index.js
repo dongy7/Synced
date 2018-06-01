@@ -1,5 +1,15 @@
 import openSocket from 'socket.io-client'
 
+export const getVideoInfo = (id) => {
+  return getId(id)
+    .then(res => res.id)
+    .then(videoId => fetch(getInfoQueryUrl(videoId)))
+    .then(res => res.json())
+}
+
+const getInfoQueryUrl = (videoId) =>
+`https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${videoId}&key=${process.env.REACT_APP_API_KEY}`
+
 export const createId = (videoId) => {
   return fetch('/api/id', {
     method: 'POST',
