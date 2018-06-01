@@ -4,13 +4,15 @@ import Player from '../components/Player'
 import Chat from '../components/Chat'
 import Navbar from '../components/Navbar'
 import { Handler } from '../api'
+import { getName } from '../api/name'
 
 class Main extends Component {
   constructor(props) {
     super(props)
+    this.id = this.props.match.params.id
     this.handler = new Handler(this.props.match.params.id)
     this.state = {
-      name: 'Anonymous Bear',
+      name: '',
       messages: []
     }
   }
@@ -25,6 +27,12 @@ class Main extends Component {
           })
         })
       }
+    })
+
+    getName(this.id).then((name) => {
+      this.setState({
+        name
+      })
     })
   }
 
@@ -42,7 +50,7 @@ class Main extends Component {
             <Grid item xs={8}>
               <div className="player-container">
                 <Player
-                  id={this.props.match.params.id}
+                  id={this.id}
                   name={this.state.name}
                   handler={this.handler}
                 />
@@ -50,7 +58,7 @@ class Main extends Component {
             </Grid>
             <Grid item xs={4}>
               <Chat
-                id={this.props.match.params.id}
+                id={this.id}
                 handler={this.handler}
                 messages={this.state.messages}
                 onMessageSent={(text) => {
