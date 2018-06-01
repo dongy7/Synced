@@ -21,7 +21,7 @@ class InputField extends React.Component {
             textAlign: 'center'
           }
         }}
-        placeholder="Enter YouTube URL"
+        placeholder="Enter YouTube URL or existing channel ID"
         fullWidth
         margin="normal"
         onChange={(e) => {

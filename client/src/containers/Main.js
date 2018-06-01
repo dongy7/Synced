@@ -1,9 +1,10 @@
 import React, { Component } from 'react'
+import CircularProgress from '@material-ui/core/CircularProgress';
 import Grid from '@material-ui/core/Grid'
 import Player from '../components/Player'
 import Chat from '../components/Chat'
 import Navbar from '../components/Navbar'
-import { Handler } from '../api'
+import { Handler, getId } from '../api'
 import { getName } from '../api/name'
 
 class Main extends Component {
@@ -13,7 +14,9 @@ class Main extends Component {
     this.handler = new Handler(this.props.match.params.id)
     this.state = {
       name: '',
-      messages: []
+      messages: [],
+      videoId: '',
+      loading: true
     }
   }
 
@@ -34,9 +37,22 @@ class Main extends Component {
         name
       })
     })
+
+    getId(this.id).then(res => {
+      this.setState({
+        loading: false,
+        videoId: res.id
+      })
+    })
   }
 
   render() {
+    if (this.state.loading) {
+      return (
+        <CircularProgress />
+      )
+    }
+
     return (
       <div>
         <Navbar
@@ -50,7 +66,7 @@ class Main extends Component {
             <Grid item xs={8}>
               <div className="player-container">
                 <Player
-                  id={this.id}
+                  id={this.state.videoId}
                   name={this.state.name}
                   handler={this.handler}
                 />

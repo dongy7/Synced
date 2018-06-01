@@ -1,5 +1,21 @@
 import openSocket from 'socket.io-client'
 
+export const createId = (videoId) => {
+  return fetch('/api/id', {
+    method: 'POST',
+    body: JSON.stringify({
+      id: videoId
+    }),
+    headers: {
+      'content-type': 'application/json'
+    }
+  }).then((res) => res.json())
+}
+
+export const getId = (id) => {
+  return fetch(`/api/video/${id}`).then((res) => res.json())
+}
+
 export class Handler {
   constructor(id) {
     this.socket = openSocket('http://localhost:3001')
