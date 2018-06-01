@@ -4,7 +4,7 @@ import IconButton from '@material-ui/core/IconButton'
 import PlayArrowIcon from '@material-ui/icons/PlayArrow'
 import PauseIcon from '@material-ui/icons/Pause'
 import ProgressBar from './ProgressBar'
-import { Hanlder } from '../api'
+import { Handler } from '../api'
 import { getWidth, getHeight } from '../utils'
 
 class Player extends React.Component {
@@ -21,7 +21,7 @@ class Player extends React.Component {
 
   constructor(props) {
     super(props)
-    this.handler = new Hanlder(this.props.id)
+    this.handler = props.handler
     this.state = {
       duration: 1,
       currentTime: 0,

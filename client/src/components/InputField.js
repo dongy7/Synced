@@ -30,7 +30,9 @@ class InputField extends React.Component {
           })
         }}
         onKeyPress={(e) => {
-          this.props.onEntered(this.state.val)
+          if (e.key === 'Enter') {
+            this.props.onEntered(this.state.val)
+          }
         }}
       />
     )

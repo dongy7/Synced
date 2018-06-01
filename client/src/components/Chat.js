@@ -5,6 +5,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import ListSubheader from '@material-ui/core/ListSubheader';
 import TextField from '@material-ui/core/TextField'
 import { withStyles } from '@material-ui/core/styles'
+import {Handler} from '../api'
 
 const styles = theme => ({
   root: {
@@ -21,6 +22,9 @@ const styles = theme => ({
 class Chat extends React.Component {
   constructor(props) {
     super(props)
+    this.state = {
+      text: ''
+    }
   }
 
   componentDidMount() {
@@ -51,8 +55,20 @@ class Chat extends React.Component {
           </div>
         </List>
         <TextField
+          value={this.state.text}
           fullWidth
           placeholder="Send a message."
+          onChange={(e) => this.setState({
+            text: e.target.value
+          })}
+          onKeyPress={(e) => {
+            if (e.key === 'Enter') {
+              this.props.onMessageSent(this.state.text)
+              this.setState({
+                text: ''
+              })
+            }
+          }}
         />
       </div>
     )

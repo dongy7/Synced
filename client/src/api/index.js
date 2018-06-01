@@ -1,6 +1,6 @@
 import openSocket from 'socket.io-client'
 
-export class Hanlder {
+export class Handler {
   constructor(id) {
     this.socket = openSocket('http://localhost:3001')
     this.id = id
@@ -31,6 +31,12 @@ export class Hanlder {
     })
   }
 
+  subscribeChat(callbacks) {
+    this.socket.on('messageReceived', (data) => {
+      callbacks.messageReceived(data)
+    })
+  }
+
   requestPause() {
     this.socket.emit('pauseRequest', {id: this.id})
   }
@@ -49,5 +55,9 @@ export class Hanlder {
 
   readySeek(time) {
     this.socket.emit('seekReady', {id: this.id, time})
+  }
+
+  sendMessage(msg) {
+    this.socket.emit('sendMessage', Object.assign({}, msg, {id: this.id}))
   }
 }

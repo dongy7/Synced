@@ -3,14 +3,31 @@ import Grid from '@material-ui/core/Grid'
 import Player from '../components/Player'
 import Chat from '../components/Chat'
 import Navbar from '../components/Navbar'
+import { Handler } from '../api'
 
 class Main extends Component {
   constructor(props) {
     super(props)
+    this.handler = new Handler(this.props.match.params.id)
     this.state = {
-      name: 'Anonymous Bear'
+      name: 'Anonymous Bear',
+      messages: []
     }
   }
+
+  componentDidMount() {
+    this.handler.subscribeChat({
+      messageReceived: (msg) => {
+        this.setState({
+          messages: this.state.messages.concat({
+            author: msg.author,
+            text: msg.text
+          })
+        })
+      }
+    })
+  }
+
   render() {
     return (
       <div>
@@ -27,11 +44,22 @@ class Main extends Component {
                 <Player
                   id={this.props.match.params.id}
                   name={this.state.name}
+                  handler={this.handler}
                 />
               </div>
             </Grid>
             <Grid item xs={4}>
-              <Chat></Chat>
+              <Chat
+                id={this.props.match.params.id}
+                handler={this.handler}
+                messages={this.state.messages}
+                onMessageSent={(text) => {
+                  this.handler.sendMessage({
+                    author: this.state.name,
+                    text
+                  })
+                }}
+              />
             </Grid>
           </Grid>
         </div>
