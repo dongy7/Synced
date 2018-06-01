@@ -7,3 +7,11 @@ export const parseUrl = (url) => {
 
   return match
 }
+
+export const getWidth = (width) => {
+  return Math.max(480, width)
+}
+
+export const getHeight = (width) => {
+  return Math.max(270, 9/16*width)
+}

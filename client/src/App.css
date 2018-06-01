@@ -2,38 +2,9 @@
   text-align: center;
 }
 
-.App-logo {
-  animation: App-logo-spin infinite 20s linear;
-  height: 80px;
-}
-
-.App-header {
-  background-color: #222;
-  height: 150px;
-  padding: 20px;
-  color: white;
-}
-
-.App-title {
-  font-size: 1.5em;
-}
-
-.App-intro {
-  font-size: large;
-}
-
-@keyframes App-logo-spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
-
 .container {
   max-width: 720px;
   margin: 0 auto;
-}
-
-.player {
-  height: 480px;
 }
 
 .control {
@@ -43,4 +14,12 @@
 .control-progress {
   margin-top: 22px;
   flex-grow: 1;
+}
+
+.player {
+  min-height: 270px;
+}
+
+.player-container {
+  min-width: 480px;
 }

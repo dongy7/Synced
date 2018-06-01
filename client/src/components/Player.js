@@ -1,10 +1,11 @@
-import React, { Fragment } from 'react'
+import React from 'react'
 import YoutubePlayer from 'youtube-player'
 import IconButton from '@material-ui/core/IconButton'
 import PlayArrowIcon from '@material-ui/icons/PlayArrow'
 import PauseIcon from '@material-ui/icons/Pause'
 import ProgressBar from './ProgressBar'
 import { Hanlder } from '../api'
+import { getWidth, getHeight } from '../utils'
 
 class Player extends React.Component {
   static stateNames = {
@@ -24,13 +25,38 @@ class Player extends React.Component {
     this.state = {
       duration: 1,
       currentTime: 0,
+      playerWidth: 0,
+      playerHeight: 0
     }
   }
 
   componentDidMount() {
+    this.boundingBox = this.element.getBoundingClientRect()
+    this.setState({
+      width: this.boundingBox.width,
+      left: this.boundingBox.left
+    })
+
+    let controlBox = this.control.getBoundingClientRect()
+    let playerWidth = getWidth(controlBox.width)
+    let playerHeight = getHeight(playerWidth)
+
+    window.addEventListener('resize', () => {
+      controlBox = this.control.getBoundingClientRect()
+      this.boundingBox = this.element.getBoundingClientRect()
+      this.setState({
+        width: this.boundingBox.width,
+        left: this.boundingBox.left
+      })
+      
+      playerWidth = getWidth(controlBox.width)
+      playerHeight = getHeight(playerWidth)
+      this.player.setSize(playerWidth, playerHeight)
+    })
+
     this.player = YoutubePlayer(this.refPlayer, {
-      width: '100%',
-      height: '100%',
+      width: playerWidth,
+      height: playerHeight,
       videoId: this.props.id,
       playerVars: {
         controls: 0,
@@ -55,20 +81,6 @@ class Player extends React.Component {
       } else {
         clearInterval(this.timer)
       }
-    })
-
-    this.boundingBox = this.element.getBoundingClientRect()
-    this.setState({
-      width: this.boundingBox.width,
-      left: this.boundingBox.left
-    })
-
-    window.addEventListener('resize', () => {
-      this.boundingBox = this.element.getBoundingClientRect()
-      this.setState({
-        width: this.boundingBox.width,
-        left: this.boundingBox.left
-      })
     })
   }
 
@@ -150,11 +162,11 @@ class Player extends React.Component {
 
   render() {
     return (
-      <Fragment>
+      <div className="player-container">
         <div className="player" ref={element => {
           this.refPlayer = element
         }}/>
-        <div className="control">
+        <div className="control" ref={element => {this.control = element}}>
           <IconButton>
             <PlayArrowIcon onClick={() => this.handlePlayClick()} />
           </IconButton>
@@ -174,7 +186,7 @@ class Player extends React.Component {
             />
           </div>
         </div>
-      </Fragment>
+      </div>
     )
   }
 }
