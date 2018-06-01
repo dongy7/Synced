@@ -30,7 +30,11 @@ export const getId = id => {
 
 export class Handler {
   constructor(id) {
-    this.socket = openSocket('http://localhost:3001')
+    const url =
+      process.env.NODE_ENV === 'production'
+        ? `https://${process.env.REACT_APP_NAME}.herokuapp.com:3001`
+        : 'http://localhost:3001'
+    this.socket = openSocket(url)
     this.id = id
     this.socket.on('connect', () => {
       this.socket.emit('channel', this.id)
