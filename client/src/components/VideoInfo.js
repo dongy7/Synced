@@ -47,6 +47,7 @@ class VideoInfo extends React.Component {
         </Card>
         <Alert
           open={this.state.alertOpen}
+          message="Code copied to clipboard"
           onClose={() =>
             this.setState({
               alertOpen: false

@@ -24,6 +24,7 @@ class InputField extends React.Component {
         placeholder="Enter YouTube URL or existing channel ID"
         fullWidth
         margin="normal"
+        error={this.props.error}
         onChange={e => {
           this.setState({
             val: e.target.value

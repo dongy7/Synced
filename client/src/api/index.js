@@ -1,5 +1,9 @@
 import openSocket from 'socket.io-client'
 
+export const validateId = id => {
+  return fetch(`/api/valid/${id}`).then(res => res.json())
+}
+
 export const getVideoInfo = id => {
   return getId(id)
     .then(res => res.id)
