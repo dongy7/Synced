@@ -10,14 +10,21 @@ function generateRandomString(length) {
 
 router.post('/id', function(req, res, next) {
   // TODO: ensure ids are unique
-  var id = generateRandomString(11)
   var videoId = req.body.id
-  if (!(videoId in videos)) {
+  var id = generateRandomString(11)
+
+  if (!(id in videos)) {
     videos[id] = videoId
   }
 
   res.json({
     id: id
+  })
+})
+
+router.get('/valid/:id', function(req, res, next) {
+  res.json({
+    valid: req.params.id in videos
   })
 })
 
