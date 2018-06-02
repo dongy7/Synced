@@ -20,6 +20,10 @@
   flex-grow: 1;
 }
 
+.control-progress:hover {
+  cursor: pointer;
+}
+
 .player {
   min-height: 270px;
 }
@@ -47,6 +51,7 @@
 
 .chat {
   margin: 0 40px;
+  overflow-wrap: break-word;
 }
 
 .chat-input {
