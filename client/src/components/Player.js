@@ -4,6 +4,7 @@ import Card from '@material-ui/core/Card'
 import IconButton from '@material-ui/core/IconButton'
 import PlayArrowIcon from '@material-ui/icons/PlayArrow'
 import PauseIcon from '@material-ui/icons/Pause'
+import ReplayIcon from '@material-ui/icons/Replay'
 import VolumeUpIcon from '@material-ui/icons/VolumeUp'
 import VolumeDownIcon from '@material-ui/icons/VolumeDown'
 import VolumeOffIcon from '@material-ui/icons/VolumeOff'
@@ -35,6 +36,7 @@ class Player extends React.Component {
       playerWidth: 0,
       playerHeight: 0,
       playing: false,
+      ended: false,
       volume: 100
     }
   }
@@ -91,6 +93,16 @@ class Player extends React.Component {
     }, 500)
 
     this.player.on('stateChange', event => {
+      if (Player.getState(event) === 'ended') {
+        this.setState({
+          ended: true
+        })
+      } else {
+        this.setState({
+          ended: false
+        })
+      }
+
       if (Player.getState(event) === 'playing') {
         const interval = 50
         this.timer = setInterval(() => {
@@ -181,6 +193,13 @@ class Player extends React.Component {
     this.handler.requestPause(this.props.id)
   }
 
+  handleReplayClick() {
+    this.handler.requestSeek({
+      time: 0,
+      paused: false
+    })
+  }
+
   handleProgressClick(progress) {
     const seekTime = this.state.duration * progress
     this.player.getPlayerState().then(val => {
@@ -209,6 +228,16 @@ class Player extends React.Component {
       return <VolumeDownIcon />
     } else {
       return <VolumeUpIcon />
+    }
+  }
+
+  renderControlIcon() {
+    if (this.state.ended) {
+      return <ReplayIcon onClick={() => this.handleReplayClick()} />
+    } else if (this.state.playing) {
+      return <PauseIcon onClick={() => this.handlePauseClick()} />
+    } else {
+      return <PlayArrowIcon onClick={() => this.handlePlayClick()} />
     }
   }
 
@@ -243,15 +272,7 @@ class Player extends React.Component {
             this.control = element
           }}
         >
-          {this.state.playing ? (
-            <IconButton>
-              <PauseIcon onClick={() => this.handlePauseClick()} />
-            </IconButton>
-          ) : (
-            <IconButton>
-              <PlayArrowIcon onClick={() => this.handlePlayClick()} />
-            </IconButton>
-          )}
+          <IconButton>{this.renderControlIcon()}</IconButton>
           <div className="player-volume-button">
             {
               <IconButton onClick={() => this.handleVolumeClick()}>
