@@ -1,6 +1,13 @@
 {
-  "name": "youtube",
-  "version": "0.0.0",
+  "name": "Synced Server",
+  "author": {
+    "email": "dong@dongyeop.com",
+    "name": "Dong Yeop Lee",
+    "url": "www.dongyeop.com"
+  },
+  "description": "Web app for watching synced videos",
+  "version": "1.0.0",
+  "license": "MIT",
   "private": true,
   "scripts": {
     "start": "node ./bin/www",

@@ -1,7 +1,8 @@
 {
-  "name": "client",
-  "version": "0.1.0",
+  "name": "Synced Client",
+  "version": "1.0.0",
   "private": true,
+  "license": "MIT",
   "dependencies": {
     "@material-ui/core": "^1.0.0",
     "@material-ui/icons": "^1.0.0",
