@@ -1,9 +1,9 @@
 {
-  "name": "Synced Server",
+  "name": "synced-server",
   "author": {
     "email": "dong@dongyeop.com",
     "name": "Dong Yeop Lee",
-    "url": "www.dongyeop.com"
+    "url": "https://dongyeop.com"
   },
   "description": "Web app for watching synced videos",
   "version": "1.0.0",
@@ -32,6 +32,9 @@
     "lint-staged": "^7.1.3",
     "nodemon": "^1.17.5",
     "prettier": "^1.13.4"
+  },
+  "engines": {
+    "node": "10.1.0"
   },
   "lint-staged": {
     "**/*.js": ["prettier --write", "git add"]
