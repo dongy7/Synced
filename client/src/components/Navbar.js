@@ -34,7 +34,7 @@ class Navbar extends React.Component {
               color="inherit"
               className={classes.flex}
             >
-              Sync
+              {this.props.title}
             </Typography>
             <Button
               color="inherit"

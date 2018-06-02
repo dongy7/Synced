@@ -55,6 +55,7 @@ class Main extends Component {
     return (
       <div>
         <Navbar
+          title="Synced"
           name={this.state.name}
           onNameSubmit={name => {
             this.setState({ name })
