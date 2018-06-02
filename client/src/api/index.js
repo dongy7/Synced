@@ -32,9 +32,8 @@ export class Handler {
   constructor(id) {
     const url =
       process.env.NODE_ENV === 'development'
-        ? 
-        'http://localhost:3001'
-        :`https://${process.env.REACT_APP_NAME}.herokuapp.com`
+        ? 'http://localhost:3001'
+        : `https://${process.env.REACT_APP_NAME}.herokuapp.com`
     this.socket = openSocket(url)
     this.id = id
     this.socket.on('connect', () => {
