@@ -6,7 +6,6 @@ import ListItemText from '@material-ui/core/ListItemText'
 import ListSubheader from '@material-ui/core/ListSubheader'
 import TextField from '@material-ui/core/TextField'
 import { withStyles } from '@material-ui/core/styles'
-import { Handler } from '../api'
 
 const styles = theme => ({
   root: {

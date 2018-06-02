@@ -2,7 +2,7 @@ import React from 'react'
 import Grid from '@material-ui/core/Grid'
 import InputField from '../components/InputField'
 import { parseUrl } from '../utils'
-import { getId, createId } from '../api'
+import { createId } from '../api'
 
 class Landing extends React.Component {
   handleUrl(url) {
