@@ -194,11 +194,11 @@ class Player extends React.Component {
 
   handleVolumeClick() {
     const volume = this.state.volume
-    if (volume > 0) {
-      this.setState({ volume: 0 })
-    } else {
-      this.setState({ volume: this.prevVolume })
-    }
+    const nextVolume = volume > 0 ? 0 : this.prevVolume
+    this.setState({
+      volume: nextVolume
+    })
+    this.player.setVolume(nextVolume)
   }
 
   renderVolumeIcon() {
