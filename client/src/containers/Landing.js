@@ -21,7 +21,7 @@ class Landing extends React.Component {
       <div className="landing">
         <Grid container>
           <Grid item xs={12}>
-            <h1 className="field-title">YouTube Sync</h1>
+            <h1 className="field-title">Sync</h1>
           </Grid>
           <Grid item xs={3} />
           <Grid item xs={6}>

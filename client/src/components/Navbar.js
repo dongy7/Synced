@@ -34,7 +34,7 @@ class Navbar extends React.Component {
               color="inherit"
               className={classes.flex}
             >
-              YouTube Sync
+              Sync
             </Typography>
             <Button
               color="inherit"
