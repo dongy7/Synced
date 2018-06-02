@@ -1,3 +1,22 @@
+export const getMinutes = seconds => {
+  return Math.floor(seconds / 60)
+}
+
+const pad = num => {
+  return num < 10 ? `0${num}` : num
+}
+
+export const getSeconds = seconds => {
+  return Math.floor(seconds % 60)
+}
+
+export const getTime = seconds => {
+  return {
+    min: getMinutes(seconds),
+    sec: pad(getSeconds(seconds))
+  }
+}
+
 export const parseUrl = url => {
   const re = /watch\?v=([a-zA-Z0-9]*)/
   const shortRe = /youtu.be\/([a-zA-Z0-9]*)/

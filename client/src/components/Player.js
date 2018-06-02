@@ -4,7 +4,12 @@ import Card from '@material-ui/core/Card'
 import IconButton from '@material-ui/core/IconButton'
 import PlayArrowIcon from '@material-ui/icons/PlayArrow'
 import PauseIcon from '@material-ui/icons/Pause'
+import VolumeUpIcon from '@material-ui/icons/VolumeUp'
+import VolumeDownIcon from '@material-ui/icons/VolumeDown'
+import VolumeOffIcon from '@material-ui/icons/VolumeOff'
 import ProgressBar from './ProgressBar'
+import TimerText from './TimerText'
+import VolumeSlider from './VolumeSlider'
 import { getWidth, getHeight } from '../utils'
 
 class Player extends React.Component {
@@ -22,12 +27,15 @@ class Player extends React.Component {
   constructor(props) {
     super(props)
     this.handler = props.handler
+    this.prevVolume = 100
     this.state = {
       duration: 1,
       currentTime: 0,
+      currentSeconds: 0,
       playerWidth: 0,
       playerHeight: 0,
-      playing: false
+      playing: false,
+      volume: 100
     }
   }
 
@@ -73,6 +81,14 @@ class Player extends React.Component {
     this.player.on('ready', () => {
       this.player.getDuration().then(val => this.setState({ duration: val }))
     })
+
+    this.interval = setInterval(() => {
+      this.player.getCurrentTime().then(time => {
+        this.setState({
+          currentSeconds: time
+        })
+      })
+    }, 500)
 
     this.player.on('stateChange', event => {
       if (Player.getState(event) === 'playing') {
@@ -176,6 +192,26 @@ class Player extends React.Component {
     })
   }
 
+  handleVolumeClick() {
+    const volume = this.state.volume
+    if (volume > 0) {
+      this.setState({ volume: 0 })
+    } else {
+      this.setState({ volume: this.prevVolume })
+    }
+  }
+
+  renderVolumeIcon() {
+    const volume = this.state.volume
+    if (volume === 0) {
+      return <VolumeOffIcon />
+    } else if (volume < 50) {
+      return <VolumeDownIcon />
+    } else {
+      return <VolumeUpIcon />
+    }
+  }
+
   render() {
     return (
       <Card>
@@ -185,6 +221,22 @@ class Player extends React.Component {
             this.refPlayer = element
           }}
         />
+        <div>
+          <div
+            className="control-progress"
+            ref={element => {
+              this.element = element
+            }}
+            onClick={e => {
+              const progress = e.nativeEvent.pageX - this.state.left
+              this.handleProgressClick(progress / this.state.width)
+            }}
+          >
+            <ProgressBar
+              completed={this.state.currentTime / this.state.duration}
+            />
+          </div>
+        </div>
         <div
           className="control"
           ref={element => {
@@ -200,20 +252,29 @@ class Player extends React.Component {
               <PlayArrowIcon onClick={() => this.handlePlayClick()} />
             </IconButton>
           )}
-          <div
-            className="control-progress"
-            ref={element => {
-              this.element = element
-            }}
-            onClick={e => {
-              const progress = e.nativeEvent.pageX - this.state.left
-              this.handleProgressClick(progress / this.state.width)
-            }}
-          >
-            <ProgressBar
-              completed={this.state.currentTime / this.state.duration}
+          <div className="player-volume-button">
+            {
+              <IconButton onClick={() => this.handleVolumeClick()}>
+                {this.renderVolumeIcon()}
+              </IconButton>
+            }
+          </div>
+          <div className="player-volume-control">
+            <VolumeSlider
+              value={this.state.volume}
+              onSliderChange={val => {
+                this.setState({ volume: val })
+                this.player.setVolume(val)
+                if (val > 0) {
+                  this.prevVolume = val
+                }
+              }}
             />
           </div>
+          <TimerText
+            currentTime={this.state.currentSeconds}
+            totalTime={this.state.duration}
+          />
         </div>
       </Card>
     )
