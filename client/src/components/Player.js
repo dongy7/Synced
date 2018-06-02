@@ -26,7 +26,8 @@ class Player extends React.Component {
       duration: 1,
       currentTime: 0,
       playerWidth: 0,
-      playerHeight: 0
+      playerHeight: 0,
+      playing: false
     }
   }
 
@@ -81,8 +82,14 @@ class Player extends React.Component {
             currentTime: this.state.currentTime + interval / 1000
           })
         }, interval)
+        this.setState({
+          playing: true
+        })
       } else {
         clearInterval(this.timer)
+        this.setState({
+          playing: false
+        })
       }
     })
   }
@@ -184,12 +191,15 @@ class Player extends React.Component {
             this.control = element
           }}
         >
-          <IconButton>
-            <PlayArrowIcon onClick={() => this.handlePlayClick()} />
-          </IconButton>
-          <IconButton>
-            <PauseIcon onClick={() => this.handlePauseClick()} />
-          </IconButton>
+          {this.state.playing ? (
+            <IconButton>
+              <PauseIcon onClick={() => this.handlePauseClick()} />
+            </IconButton>
+          ) : (
+            <IconButton>
+              <PlayArrowIcon onClick={() => this.handlePlayClick()} />
+            </IconButton>
+          )}
           <div
             className="control-progress"
             ref={element => {
