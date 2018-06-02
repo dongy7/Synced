@@ -61,6 +61,9 @@ class Player extends React.Component {
       videoId: this.props.id,
       playerVars: {
         controls: 0,
+        disablekb: 1,
+        modestbranding: 1,
+        rel: 0,
         showinfo: 0
       }
     })
