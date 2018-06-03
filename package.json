@@ -13,6 +13,7 @@
     "start": "node ./bin/www",
     "dev": "PORT=3001 nodemon bin/www",
     "format": "prettier --write '**/*.js'",
+    "build": "cd client/ && yarn install && yarn run build",
     "heroku-postbuild":
       "cd client/ && npm install && npm install --only=dev --no-shrinkwrap && npm run build"
   },

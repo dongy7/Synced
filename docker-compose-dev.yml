@@ -1,15 +1,19 @@
 version: '3'
 services:
   api-service:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile-dev
     volumes:
-      - .:/usr/src/app
+      - .:/usr/src/app/
+      - /usr/src/app/node_modules
     ports:
       - 3001:3001
   client-service:
     build: ./client
     volumes:
       - ./client:/usr/src/app
+      - /usr/src/app/node_modules
     ports:
       - 3000:3000
     environment:
