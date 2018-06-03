@@ -14,10 +14,12 @@
     "dev": "PORT=3001 nodemon bin/www",
     "format": "prettier --write '**/*.js'",
     "build": "cd client/ && yarn install && yarn run build",
-    "heroku-postbuild":
-      "cd client/ && npm install && npm install --only=dev --no-shrinkwrap && npm run build"
+    "heroku-postbuild": "cd client/ && npm install && npm install --only=dev --no-shrinkwrap && npm run build"
   },
-  "cacheDirectories": ["node_modules", "client/node_modules"],
+  "cacheDirectories": [
+    "node_modules",
+    "client/node_modules"
+  ],
   "dependencies": {
     "cookie-parser": "~1.4.3",
     "debug": "~2.6.9",
@@ -26,6 +28,7 @@
     "jade": "~1.11.0",
     "morgan": "~1.9.0",
     "randomstring": "^1.1.5",
+    "redis": "^2.8.0",
     "socket.io": "^2.1.1"
   },
   "devDependencies": {
@@ -38,10 +41,15 @@
     "node": ">=8.11.2 <10.3.0"
   },
   "lint-staged": {
-    "**/*.js": ["prettier --write", "git add"]
+    "**/*.js": [
+      "prettier --write",
+      "git add"
+    ]
   },
   "nodemonConfig": {
-    "ignore": ["client/*"],
+    "ignore": [
+      "client/*"
+    ],
     "verbose": true
   }
 }

@@ -1,31 +1,23 @@
 var express = require('express')
-var router = express.Router()
 var animals = require('../utils/names')
 
-var channels = {}
+function configure(redis) {
+  var router = express.Router()
 
-router.get('/channel/:id', function(req, res) {
-  var id = req.params.id
-  if (!(id in channels)) {
-    channels[id] = {
-      count: 0
-    }
-  }
+  router.get('/channel/:id', function(req, res) {
+    var id = req.params.id
+    redis.hget(`channel:${id}`, 'count', (err, data) => {
+      var count = Math.max(data - 1, 0)
+      var num =
+        count >= animals.length
+          ? ' ' + (Math.floor(count / animals.length) + 1)
+          : ''
+      var name = 'Anonymous ' + animals[count % animals.length] + num
+      res.json(name)
+    })
+  })
 
-  var count = channels[id].count
-  var num =
-    count >= animals.length
-      ? ' ' + (Math.floor(count / animals.length) + 1)
-      : ''
-  var name = 'Anonymous ' + animals[count % animals.length] + num
-  channels[id].count++
+  return router
+}
 
-  res.json(name)
-})
-
-/* GET home page. */
-router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' })
-})
-
-module.exports = router
+module.exports = configure

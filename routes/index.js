@@ -1,37 +1,60 @@
 var express = require('express')
 var randomstring = require('randomstring')
-var router = express.Router()
 
-var videos = {}
+function configure(redis) {
+  var router = express.Router()
+  var videos = {}
 
-function generateRandomString(length) {
-  return randomstring.generate(length)
-}
-
-router.post('/id', function(req, res, next) {
-  // TODO: ensure ids are unique
-  var videoId = req.body.id
-  var id = generateRandomString(11)
-
-  if (!(id in videos)) {
-    videos[id] = videoId
+  function generateRandomString(length) {
+    return randomstring.generate(length)
   }
 
-  res.json({
-    id: id
-  })
-})
+  router.post('/id', function(req, res, next) {
+    // TODO: ensure ids are unique
+    var videoId = req.body.id
+    var id = generateRandomString(11)
 
-router.get('/valid/:id', function(req, res, next) {
-  res.json({
-    valid: req.params.id in videos
+    redis.exists(`channel:${id}`, (err, data) => {
+      if (err) throw err
+      if (data === 0) {
+        redis.hmset(
+          `channel:${id}`,
+          'videoId',
+          videoId,
+          'count',
+          0,
+          (err, data) => {
+            if (err) throw err
+            res.json({
+              id: id
+            })
+          }
+        )
+      }
+    })
   })
-})
 
-router.get('/video/:id', function(req, res, next) {
-  res.json({
-    id: videos[req.params.id]
+  router.get('/valid/:id', function(req, res, next) {
+    const id = req.params.id
+    redis.exists(`channel:${id}`, (err, data) => {
+      if (err) throw err
+      res.json({
+        valid: data !== 0
+      })
+    })
   })
-})
 
-module.exports = router
+  router.get('/video/:id', function(req, res, next) {
+    const id = req.params.id
+    redis.hget(`channel:${id}`, 'videoId', (err, data) => {
+      if (err) throw err
+      res.json({
+        id: data
+      })
+    })
+  })
+
+  return router
+}
+
+module.exports = configure

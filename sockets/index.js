@@ -1,17 +1,9 @@
-module.exports = io => {
-  const channels = {}
-
+module.exports = (io, redis) => {
   io.on('connection', socket => {
     socket.on('channel', id => {
-      if (!channels[id]) {
-        channels[id] = {
-          numClients: 0,
-          readyCount: 0
-        }
-      }
-
-      channels[id].numClients++
-      socket.join(id)
+      redis.hincrby(`channel:${id}`, 'count', 1, (err, data) => {
+        socket.join(id)
+      })
     })
 
     socket.on('pauseRequest', data => {
@@ -22,22 +14,25 @@ module.exports = io => {
       io.sockets.in(data.id).emit('ready')
     })
 
+    var checkReady = data => {
+      var key = `channel:${data.id}`
+      redis.hincrby(key, 'ready', 1, (err, readyCount) => {
+        redis.hget(key, 'count', (err, count) => {
+          if (parseInt(readyCount) >= parseInt(count)) {
+            redis.hset(key, 'ready', 0, (err, rep) => {
+              io.sockets.in(data.id).emit('play')
+            })
+          }
+        })
+      })
+    }
+
     socket.on('ready', data => {
-      const channel = channels[data.id]
-      channel.readyCount++
-      if (channel.readyCount === channel.numClients) {
-        channel.readyCount = 0
-        io.sockets.in(data.id).emit('play')
-      }
+      checkReady(data)
     })
 
     socket.on('seekReady', data => {
-      const channel = channels[data.id]
-      channel.readyCount++
-      if (channel.readyCount === channel.numClients) {
-        channel.readyCount = 0
-        io.sockets.in(data.id).emit('play')
-      }
+      checkReady(data)
     })
 
     socket.on('seekRequest', data => {
@@ -59,12 +54,18 @@ module.exports = io => {
     socket.on('disconnecting', reason => {
       const rooms = Object.keys(socket.rooms)
       rooms.forEach(room => {
-        if (channels[room]) {
-          channels[room].numClients--
-          if (channels[room].numClients === 0) {
-            delete channels[room]
+        const key = `channel:${room}`
+        redis.exists(key, (err, count) => {
+          if (count === 1) {
+            redis.hincrby(key, 'count', -1, (err, remaining) => {
+              if (remaining <= 0) {
+                redis.del(key, (err, number) => {
+                  console.log(`${number} deleted`)
+                })
+              }
+            })
           }
-        }
+        })
       })
     })
   })

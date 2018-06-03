@@ -4,7 +4,15 @@
  * Module dependencies.
  */
 
-var app = require('../app');
+var redis = require('redis')
+var client = redis.createClient(6379, 'redis')
+
+client.on('error', function(err) {
+  console.log('Error ' + err)
+})
+
+var app = require('../app')(client);
+
 var debug = require('debug')('youtube:server');
 var http = require('http');
 
@@ -30,7 +38,7 @@ server.on('error', onError);
 server.on('listening', onListening);
 
 var io = require('socket.io')(server, { origins: '*:*'})
-require('../sockets/')(io)
+require('../sockets/')(io, client)
 
 /**
  * Normalize a port into a number, string, or false.

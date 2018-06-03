@@ -9,6 +9,8 @@ services:
       - /usr/src/app/node_modules
     ports:
       - 3001:3001
+    depends_on:
+      - redis
   client-service:
     build: ./client
     volumes:
@@ -20,3 +22,5 @@ services:
       - REACT_APP_API_KEY
     depends_on:
       - api-service
+  redis:
+    image: redis:3.2-alpine
