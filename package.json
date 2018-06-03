@@ -34,7 +34,7 @@
     "prettier": "^1.13.4"
   },
   "engines": {
-    "node": "10.1.0"
+    "node": ">=8.11.2 <10.3.0"
   },
   "lint-staged": {
     "**/*.js": ["prettier --write", "git add"]
