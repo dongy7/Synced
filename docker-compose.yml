@@ -3,7 +3,6 @@ services:
   api-service:
     build:
       context: .
-      dockerfile: Dockerfile-dev
     volumes:
       - .:/usr/src/app/
       - /usr/src/app/node_modules
