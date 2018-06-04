@@ -19,7 +19,7 @@ class VideoInfo extends React.Component {
   componentDidMount() {
     getVideoInfo(this.props.id).then(res => {
       this.setState({
-        title: res.items[0].snippet.title
+        title: res.title
       })
     })
   }

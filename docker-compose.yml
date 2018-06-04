@@ -1,13 +1,13 @@
 version: '3'
 services:
   api-service:
-    build:
-      context: .
+    build: .
     volumes:
       - .:/usr/src/app/
-      - /usr/src/app/node_modules
     ports:
       - 3001:3001
+    environment:
+      - YOUTUBE_API_KEY
     depends_on:
       - redis
   client-service:
@@ -17,8 +17,6 @@ services:
       - /usr/src/app/node_modules
     ports:
       - 3000:3000
-    environment:
-      - REACT_APP_API_KEY
     depends_on:
       - api-service
   redis:

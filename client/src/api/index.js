@@ -5,16 +5,12 @@ export const validateId = id => {
 }
 
 export const getVideoInfo = id => {
+  console.log(id)
   return getId(id)
     .then(res => res.id)
-    .then(videoId => fetch(getInfoQueryUrl(videoId)))
+    .then(videoId => fetch(`/api/title/${videoId}`))
     .then(res => res.json())
 }
-
-const getInfoQueryUrl = videoId =>
-  `https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${videoId}&key=${
-    process.env.REACT_APP_API_KEY
-  }`
 
 export const createId = videoId => {
   return fetch('/api/id', {

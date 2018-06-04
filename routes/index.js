@@ -1,5 +1,6 @@
 var express = require('express')
 var randomstring = require('randomstring')
+var request = require('request')
 
 function configure(redis) {
   var router = express.Router()
@@ -52,6 +53,26 @@ function configure(redis) {
         id: data
       })
     })
+  })
+
+  router.get('/title/:id', function(req, res, next) {
+    const id = req.params.id
+    const apiKey = process.env.YOUTUBE_API_KEY
+    request(
+      `https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${id}&key=${apiKey}`,
+      { json: true },
+      (err, data, body) => {
+        if (err) {
+          return console.log(err)
+        }
+
+        if (body.items !== undefined && body.items[0] !== undefined) {
+          res.json({
+            title: body.items[0].snippet.title
+          })
+        }
+      }
+    )
   })
 
   return router
